@@ -1,0 +1,18 @@
+#!/bin/bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+wget http://epel.mirror.net.in/epel/6/x86_64/epel-release-6-8.noarch.rpm
+rpm -ivh epel-release-6-8.noarch.rpm
+yum install -y exim
+yum remove sendmail
+service postfix stop
+chkconfig postfix off
+alternatives --config mta
+chkconfig exim on
+service exim start
+
+cp /etc/exim/exim.conf /etc/exim/exim.conf.org
+cp $CURRENT_PATH/config/* / -rf
