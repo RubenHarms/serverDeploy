@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo "Please enter the domainname, followed by [ENTER]:";
+read domain;
+
+existing=`cat /etc/postfix/vmail_domains | grep ${domain}` 
+
+if [ $? == 1 ]; then
+	echo "$domain	OK" >> cat /etc/postfix/vmail_domains 
+fi
+
+encodedPassword=`doveadm pw -s sha1 | cut -d '}' -f2`
+
+boxes=(info support bounce unsubscribe)
+
+for i in ${boxes[@]}; do
+	
+	cat /etc/postfix/vmail_mailboxes | grep "${i}@${domain}"
+	if [ $? == 1 ]; then
+		echo "${i}@${domain}	${domain}/${i}/" >> /etc/postfix/vmail_mailboxes
+		echo "${i}@${domain}:${encodedPassword}" >> /etc/dovecot/passwd
+	fi
+done;
+
+postmap /etc/postfix/vmail_mailboxes
+postmap /etc/postfix/vmail_domains
+
+service postfix restart
+service dovecot restart

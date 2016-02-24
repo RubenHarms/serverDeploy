@@ -1,0 +1,28 @@
+#!/bin/bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+sudo screen -U -S mailserver-screen
+sudo yum update
+sudo groupadd vmail -g 2222
+sudo useradd vmail -r -g 2222 -u 2222 -d /var/vmail -m -c "mail user"
+sudo yum remove exim sendmail
+sudo yum install postfix cronie dovecot
+sudo cp /etc/postfix/main.cf{,.orig}
+sudo cp /etc/dovecot/dovecot.conf{,.orig}
+
+sudo cp $CURRENT_PATH/config/etc/* /etc/ -rf
+
+sudo postmap /etc/postfix/vmail_domains
+sudo postmap /etc/postfix/vmail_mailbox
+sudo postmap /etc/postfix/vmail_aliases
+
+sudo chown root: /etc/dovecot/passwd
+sudo chmod 600 /etc/dovecot/passwd
+
+sudo chkconfig postfix on
+sudo chkconfig dovecot on
+sudo service postfix restart
+sudo service dovecot restart
