@@ -1,0 +1,26 @@
+#!/bin/bash
+
+sudo mkdir /var/www/domains/majesticsender --parents;
+
+sudo groupadd majesticsender
+sudo useradd majesticsender -g majesticsender -d /var/www/domains/majesticsender;
+chown majesticsender.majesticsender /var/www/domains/majesticsender  -R
+
+php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
+sudo php composer-setup.php --install-dir=/usr/bin/
+sudo mv /usr/bin/composer.phar /usr/bin/composer 
+php -r "unlink('composer-setup.php');"
+
+mkdir ~/.ssh
+ssh-keygen -t rsa -C "postbus@rubenharms.nl"
+cat ~/.ssh/id_rsa.pub
+
+echo "Add the key above to de chain of the repository from Majestic sender and press [ENTER] to continue: "
+read continue;
+
+yum -y install nodejs npm
+npm install -g uglify-js
+npm install -g uglifycss
+cd /var/www/domains/majesticsender/
+git clone http://git.e-vence.nl/rsa/MajesticSender.git /var/www/domains/majesticsender
+composer update
