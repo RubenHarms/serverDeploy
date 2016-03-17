@@ -2,6 +2,7 @@
 
 sudo mkdir /var/www/domains/majesticsender --parents;
 git clone http://git.e-vence.nl/rsa/MajesticSender.git /var/www/domains/majesticsender
+sudo groupadd majesticsender
 sudo useradd majesticsender -g majesticsender -d /var/www/domains/majesticsender;
 chown majesticsender.majesticsender /var/www/domains/majesticsender  -R
 
