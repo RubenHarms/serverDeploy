@@ -4,5 +4,6 @@ rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
 yum -y groupinstall 'Development Tools'
 yum  -y install nano php56w php56w-opcache php56w-intl php56w-imap php56w-mongo php56w-gd php56w-curl php56w-mysql php56w-fpm php56w-mbstring openssl openssl-devel php56w-pear php56w-devel 
 pecl install mongo
+echo "" >> /etc/php.ini
 echo "extension=mongo.so" >> /etc/php.ini
 php5 -v
