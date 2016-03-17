@@ -23,5 +23,5 @@ sudo apt-get install npm
 sudo npm install -g uglify-js
 npm install -g uglifycss
 
-cd /var/www/domains/majesticsender/;
-composer update;
+cd /var/www/domains/majesticsender/
+composer update
