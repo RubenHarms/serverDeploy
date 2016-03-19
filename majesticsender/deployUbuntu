@@ -1,13 +1,8 @@
 #!/bin/bash
 
 sudo mkdir /var/www/domains/majesticsender --parents;
-git clone http://git.e-vence.nl/rsa/MajesticSender.git /var/www/domains/majesticsender
-sudo groupadd majesticsender
-sudo useradd majesticsender -g majesticsender -d /var/www/domains/majesticsender;
-chown majesticsender.majesticsender /var/www/domains/majesticsender  -R
 
 php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
-php -r "if (hash('SHA384', file_get_contents('composer-setup.php')) === 'fd26ce67e3b237fffd5e5544b45b0d92c41a4afe3e3f778e942e43ce6be197b9cdc7c251dcde6e2a52297ea269370680') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); }"
 sudo php composer-setup.php --install-dir=/usr/bin/
 sudo mv /usr/bin/composer.phar /usr/bin/composer 
 php -r "unlink('composer-setup.php');"
@@ -17,6 +12,11 @@ cat ~/.ssh/id_rsa.pub
 
 echo "Add the key above to de chain of the repository from Majestic sender and press [ENTER] to continue: "
 read continue;
+
+git clone http://git.e-vence.nl/rsa/MajesticSender.git /var/www/domains/majesticsender
+sudo groupadd majesticsender
+sudo useradd majesticsender -g majesticsender -d /var/www/domains/majesticsender;
+chown majesticsender.majesticsender /var/www/domains/majesticsender  -R
 
 sudo apt-get install nodejs
 sudo apt-get install npm
