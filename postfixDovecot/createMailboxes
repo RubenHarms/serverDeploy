@@ -15,7 +15,7 @@ boxes=(info support bounce unsubscribe)
 
 for i in ${boxes[@]}; do
 	
-	cat /etc/postfix/vmail_mailboxes | grep "${i}@${domain}"
+	cat /etc/postfix/vmail_mailbox | grep "${i}@${domain}"
 	if [ $? == 1 ]; then
 		echo "${i}@${domain}	${domain}/${i}/" >> /etc/postfix/vmail_mailboxes
 		echo "${i}@${domain}:${encodedPassword}" >> /etc/dovecot/passwd
