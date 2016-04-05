@@ -17,12 +17,12 @@ for i in ${boxes[@]}; do
 	
 	cat /etc/postfix/vmail_mailbox | grep "${i}@${domain}"
 	if [ $? == 1 ]; then
-		echo "${i}@${domain}	${domain}/${i}/" >> /etc/postfix/vmail_mailboxes
+		echo "${i}@${domain}	${domain}/${i}/" >> /etc/postfix/vmail_mailbox
 		echo "${i}@${domain}:${encodedPassword}" >> /etc/dovecot/passwd
 	fi
 done;
 
-postmap /etc/postfix/vmail_mailboxes
+postmap /etc/postfix/vmail_mailbox
 postmap /etc/postfix/vmail_domains
 
 service postfix restart
