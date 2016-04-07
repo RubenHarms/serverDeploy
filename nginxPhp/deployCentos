@@ -6,4 +6,4 @@ yum  -y install nano php56w php56w-opcache php56w-intl php56w-imap php56w-mongo 
 pecl install mongo
 echo "" >> /etc/php.ini
 echo "extension=mongo.so" >> /etc/php.ini
-php5 -v
+php -v
