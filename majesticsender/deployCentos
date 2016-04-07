@@ -24,3 +24,4 @@ composer update
 sudo groupadd majesticsender
 sudo useradd majesticsender -g majesticsender -d /var/www/domains/majesticsender;
 chown majesticsender.majesticsender /var/www/domains/majesticsender  -R
+composer update
