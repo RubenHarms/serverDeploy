@@ -18,6 +18,20 @@ function addSoftware () {
     FOLDERS+=("$4")
 }
 
+function installComposer(){
+    php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
+    php composer-setup.php --install-dir=/usr/bin/
+    mv /usr/bin/composer.phar /usr/bin/composer
+    php -r "unlink('composer-setup.php');"
+}
+
+function createGitKey(){
+    ssh-keygen -t rsa -C "postbus@rubenharms.nl"
+    cat ~/.ssh/id_rsa.pub
+    echo "Add the key above to de chain of the repository and press [ENTER] to continue: "
+    read continue;
+}
+
 requireRoot
 
 addSoftware 'MajesticSender' 'majesticsender' 'git@git.e-vence.nl:rsa/MajesticSender.git' 'majesticsender'
@@ -28,7 +42,6 @@ showChoices "NAMES"
 
 askQuestion choices "Which software do you want to install?" 0 "${USERS[@]}"
 
-exit;
 
 dir=${FOLDERS[$lastInput]}
 user=${USERS[$lastInput]}
@@ -37,16 +50,13 @@ repository=${REPOSITORIES[$lastInput]}
 
 sudo mkdir /var/www/domains/${dir} --parents;
 
-php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
-php composer-setup.php --install-dir=/usr/bin/
-mv /usr/bin/composer.phar /usr/bin/composer
-php -r "unlink('composer-setup.php');"
+if ! [[ -f "/usr/bin/composer" ]]; then
+    askQuestion boolean "Do you want to install composer? (y/n) " "y"
+    callOnYes "installComposer"
+fi
 
-ssh-keygen -t rsa -C "postbus@rubenharms.nl"
-cat ~/.ssh/id_rsa.pub
-
-echo "Add the key above to de chain of the repository from Majestic sender and press [ENTER] to continue: "
-read continue;
+askQuestion boolean "Do you create a new SSH key for the git server? (y/n) " "y"
+callOnYes "createGitKey"
 
 git clone ${repository} /var/www/domains/${dir}
 groupadd $user
@@ -63,6 +73,6 @@ npm install -g uglify-js
 npm install -g uglifycss
 
 cd /var/www/domains/${dir}/
-cp app/config/parameters_prod.yml app/config/parameters.yml
+cp app/config/parameters.yml.prod app/config/parameters.yml
 
 composer update
