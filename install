@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+. ${CURRENT_PATH}/include/main
+
+function installUtils (){
+  if [ "$OS" = "Ubuntu" ]; then
+        sudo apt-get update
+        apt-get install nano ntp git build-essential software-properties-common
+  fi
+}
+
+requireRoot
+
+SOFTWARE=("Exim", "Nginx & PHP" "WebApps" "Postfix & Dovecot (Vmail)")
+CHOICES=("exim" "nginxphp" "webapps" "vmail")
+CURRENT_DIR=$(getCurrentDir);
+
+echo "The following software is available: ";
+showChoices "SOFTWARE"
+
+askQuestion choices "Which software do you want to install?" 0 "${CHOICES[@]}"
+install=${CHOICES[$lastInput]}
+
+askQuestion boolean "Do you want to install the basic utils first? (y/n) " "y"
+callOnYes "installUtils"
+
+if [ "$install" = "webapps" ]; then
+
+    askQuestion boolean "Do you want to install the Nginx & PHP-FPM environment before install? (y/n)" "y"
+    echo ""
+    callOnYes "${CURRENT_PATH}/nginxPhp/install"
+
+    echo ""
+    ${CURRENT_PATH}/webapps/install
+
+elif [ "$install" = "exim" ]; then
+     callIfSupported "${CURRENT_PATH}/exim/deploy${OS}"
+elif [ "$install" = "nginxphp" ]; then
+     callIfSupported "${CURRENT_PATH}/nginxPhp/install"
+elif [ "$install" = "vmail" ]; then
+     callIfSupported "${CURRENT_PATH}/postfixDovecot/deploy${OS}"
+fi
+

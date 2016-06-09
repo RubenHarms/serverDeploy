@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+. ${CURRENT_PATH}/../include/main
+
+
+SOFTWARE=("5.6" "7.0")
+DIRS=("php5.6" "php7")
+
+while true; do
+
+    echo "The following PHP versions are available: ";
+    showChoices "SOFTWARE"
+
+    askQuestion choices "Which version do you want to install?" 0 "${DIRS[@]}"
+    versionFolder=${DIRS[$lastInput]}
+
+    scriptPath=${CURRENT_PATH}/${versionFolder}/deploy${OS}
+
+    if  ! [[ -f  "$scriptPath" ]]; then
+        echo
+        echo "This version is currently not supported for ${OS}! (No file at ${scriptPath})"
+        echo
+    else
+        break
+    fi
+done;
+
+$scriptPath
