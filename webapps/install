@@ -92,5 +92,61 @@ fi
 
 composer update
 
-service php-fpm restart
+if [ -d "/var/www/domains/${dir}/app/cache/" ]; then
+    chmod 777 /var/www/domains/${dir}/app/cache/ -R
+elif [ -d "/var/www/domains/${dir}/var/cache/" ]; then
+    chmod 777 /var/www/domains/${dir}/var/cache/ -R
+fi
+
+if [ -d "/var/www/domains/${dir}/app/logs/" ]; then
+    chmod 777 /var/www/domains/${dir}/app/logs/ -R;
+elif [ -d "/var/www/domains/${dir}/var/logs/" ]; then
+    chmod 777 /var/www/domains/${dir}/var/logs/ -R
+fi
+
+if [ -f "/var/www/domains/${dir}/app/console" ]; then
+    php /var/www/domains/${dir}/app/console cache:clear --env=prod
+    php /var/www/domains/${dir}/app/console fos:js-routing:dump --env=prod
+    php /var/www/domains/${dir}/app/console assets:install --env=prod
+    php /var/www/domains/${dir}/app/console assetic:dump --env=prod
+elif [ -f "/var/www/domains/${dir}/bin/console" ]; then
+    php /var/www/domains/${dir}/bin/console cache:clear --env=prod
+    php /var/www/domains/${dir}/bin/console fos:js-routing:dump --env=prod
+    php /var/www/domains/${dir}/bin/console assets:install --env=prod
+    php /var/www/domains/${dir}/bin/console assetic:dump --env=prod
+fi
+
+restartPhpFpm
+symbolicPhpFpm
+
 service nginx restart
+
+sqlUsername=`cat /var/www/domains/rsaleads/app/config/parameters.yml | grep 'database_user:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
+sqlPassword=`cat /var/www/domains/rsaleads/app/config/parameters.yml | grep 'database_password:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
+sqlDatabase=`cat /var/www/domains/rsaleads/app/config/parameters.yml | grep 'database_name:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
+
+echo
+echo "You can add the following SQL grant statement to the SQL server, if the SQL server is in the same local network: "
+echo
+
+devices=(`ls /sys/class/net`)
+
+for ((i = 0; i < ${#devices[@]}; i++))
+do
+    if ! [[ "${devices[$i]}" = "lo" ]]; then
+        localIp=`/sbin/ifconfig ${devices[$i]} | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+        echo "GRANT ALL ON ${sqlDatabase}.* TO ${sqlUsername}@'${localIp}' identified BY '${sqlPassword}'"
+    fi
+done
+
+echo
+echo "You can add the following SQL grant statement to the SQL server, if the SQL server in another network: "
+echo
+
+for ((i = 0; i < ${#devices[@]}; i++))
+do
+    if ! [[ "${devices[$i]}" = "lo" ]]; then
+        externalIp=`curl --interface eth0 -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'`
+        echo "GRANT ALL ON ${sqlDatabase}.* TO ${sqlUsername}@'${externalIp}' identified BY '${sqlPassword}'"
+    fi
+done

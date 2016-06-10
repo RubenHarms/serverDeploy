@@ -38,6 +38,39 @@ function callIfSupported(){
     fi
 }
 
+function restartPhpFpm(){
+    if [ -f "/etc/init.d/php-fpm" ]; then
+      service php-fpm restart
+    fi
+
+    if [ -f "/etc/init.d/php7.0-fpm" ]; then
+      service php7.0-fpm restart
+    fi
+
+    if [ -f "/etc/init.d/php5-fpm" ]; then
+      service php5-fpm restart
+    fi
+
+    if [ -f "/etc/init.d/php5.6-fpm" ]; then
+      service php5.6-fpm restart
+    fi
+}
+
+function symbolicPhpFpm(){
+    if ! [[ -f "/var/run/php-fpm/php-fpm.sock" ]]; then
+        mkdir /var/run/php-fpm --parents;
+
+        if [[ -f "/var/run/php/php7.0-fpm.sock" ]]; then
+            ln -s /var/run/php/php7.0-fpm.sock /var/run/php-fpm/php-fpm.sock;
+        fi
+        if [[ -f "/var/run/php/php5-fpm.sock" ]]; then
+            ln -s /var/run/php/php5-fpm.sock /var/run/php-fpm/php-fpm.sock;
+        fi
+        if [[ -f "/var/run/php/php5.6-fpm.sock" ]]; then
+            ln -s /var/run/php/php5.6-fpm.sock /var/run/php-fpm/php-fpm.sock;
+        fi
+    fi
+}
 function getArrayArguments () {
      a=("$@");
 
