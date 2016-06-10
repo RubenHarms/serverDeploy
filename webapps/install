@@ -73,6 +73,21 @@ npm install -g uglify-js
 npm install -g uglifycss
 
 cd /var/www/domains/${dir}/
-cp app/config/parameters.yml.prod app/config/parameters.yml
+
+if [ -f "/var/www/domains/${dir}/app/config/parameters.yml.prod"  ]; then
+    cp app/config/parameters.yml.prod app/config/parameters.yml
+fi
+
+if [ -d "/var/www/domains/${dir}/etc/nginx/conf.d/" ]; then
+    cp /var/www/domains/${dir}/etc/nginx/conf.d/* /etc/nginx/conf.d/
+fi
+
+if [ -d "/etc/nginx/ssl" ]; then
+    mkdir /etc/nginx/ssl;
+fi
+
+if [ -d "/var/www/domains/${dir}/etc/nginx/ssl/" ]; then
+    cp /var/www/domains/${dir}/etc/nginx/ssl/* /etc/nginx/ssl/
+fi
 
 composer update
