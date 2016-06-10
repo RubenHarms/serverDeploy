@@ -9,7 +9,7 @@ popd > /dev/null
 function installUtils (){
   if [ "$OS" = "Ubuntu" ]; then
         sudo apt-get update
-        apt-get install nano ntp git build-essential software-properties-common
+        apt-get install nano ntp git build-essential software-properties-common -y
   fi
 }
 

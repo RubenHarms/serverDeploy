@@ -63,9 +63,9 @@ groupadd $user
 useradd $user -g $user -d /var/www/domains/${dir};
 chown ${user}.${user} /var/www/domains/${dir}  -R
 
-if [ OS = "Ubuntu" ]; then
-    sudo apt-get install nodejs npm
-elif [ OS = "RedHat" ]; then
+if [ "$OS" = "Ubuntu" ]; then
+    sudo apt-get install nodejs npm -y
+elif [ "$OS" = "RedHat" ]; then
     yum -y install nodejs npm
 fi
 
@@ -82,7 +82,7 @@ if [ -d "/var/www/domains/${dir}/etc/nginx/conf.d/" ]; then
     cp /var/www/domains/${dir}/etc/nginx/conf.d/* /etc/nginx/conf.d/
 fi
 
-if [ -d "/etc/nginx/ssl" ]; then
+if ! [[ -d "/etc/nginx/ssl" ]]; then
     mkdir /etc/nginx/ssl;
 fi
 
@@ -91,3 +91,6 @@ if [ -d "/var/www/domains/${dir}/etc/nginx/ssl/" ]; then
 fi
 
 composer update
+
+service php-fpm restart
+service nginx restart
