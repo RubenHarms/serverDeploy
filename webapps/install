@@ -27,7 +27,7 @@ function installComposer(){
 
 function createGitKey(){
     ssh-keygen -t rsa -C "postbus@rubenharms.nl"
-    cat ~/.ssh/id_rsa.pub
+    cat /root/.ssh/id_rsa.pub
     echo "Add the key above to de chain of the repository and press [ENTER] to continue: "
     read continue;
 }
