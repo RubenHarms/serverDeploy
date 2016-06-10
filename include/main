@@ -57,16 +57,16 @@ function restartPhpFpm(){
 }
 
 function symbolicPhpFpm(){
-    if ! [[ -f "/var/run/php-fpm/php-fpm.sock" ]]; then
+    if ! [[ -S "/var/run/php-fpm/php-fpm.sock" ]]; then
         mkdir /var/run/php-fpm --parents;
 
-        if [[ -f "/var/run/php/php7.0-fpm.sock" ]]; then
+        if [[ -S "/var/run/php/php7.0-fpm.sock" ]]; then
             ln -s /var/run/php/php7.0-fpm.sock /var/run/php-fpm/php-fpm.sock;
         fi
-        if [[ -f "/var/run/php/php5-fpm.sock" ]]; then
+        if [[ -S "/var/run/php/php5-fpm.sock" ]]; then
             ln -s /var/run/php/php5-fpm.sock /var/run/php-fpm/php-fpm.sock;
         fi
-        if [[ -f "/var/run/php/php5.6-fpm.sock" ]]; then
+        if [[ -S "/var/run/php/php5.6-fpm.sock" ]]; then
             ln -s /var/run/php/php5.6-fpm.sock /var/run/php-fpm/php-fpm.sock;
         fi
     fi
