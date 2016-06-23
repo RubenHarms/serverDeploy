@@ -112,7 +112,13 @@ function askQuestion(){
 
     while true; do
         echo -n "${question} [${default}]: ";
-        read input
+
+	if [ "${type}" = "directory" ]; then
+		echo ""
+		read -e input
+	else
+	        read input
+	fi
 
         if ! [[ "$default" = "" ]] && [ "$input" = "" ]; then
             lastInput=$default
@@ -131,12 +137,27 @@ function askQuestion(){
                 lastInput=$input;
                 break
             fi
-        elif [ "${type}" = "choices" ]; then
+	elif [ "${type}" = "choices" ]; then
             if [[ "${#choices[$input]}" -ne 0 ]]; then
                 lastInput=$input;
                 break
-            fi
-        fi
+            fi       
+        elif [ "${type}" = "text" ]; then
+	  if ! [[ "${input}" = "" ]]; then
+                lastInput=$input;
+                break
+          fi
+	elif [ "${type}" = "directory" ]; then
+            if [[ -d  "$input" ]]; then
+                lastInput=$input;
+                break
+            fi       
+	 elif [ "${type}" = "file" ]; then
+            if [[ -f  "$input" ]]; then
+                lastInput=$input;
+                break
+            fi  
+        fi	
     done
 
 }

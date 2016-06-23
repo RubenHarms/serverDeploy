@@ -1,0 +1,38 @@
+#!/bin/bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+. ${CURRENT_PATH}/../include/main
+
+requireRoot
+cd ${CURRENT_PATH}/templates
+templates=($(ls *))
+
+askQuestion text "What domain (without www) do you want to use for the new local virtual host?"
+domain=$lastInput
+
+askQuestion directory "What is de document root for the new local virtual host?"
+path=`realpath $lastInput`
+
+
+echo "The following templates is available: ";
+showChoices "templates"
+
+askQuestion choices "Which template do you want to install?" 0 "${templates[@]}"
+template=${templates[$lastInput]}
+domains="www.${domain} ${domain}"
+
+configPath=/etc/nginx/conf.d/${domain}.conf
+
+cp ${CURRENT_PATH}/templates/${template} /etc/nginx/conf.d/${domain}.conf
+sed -i "s/##DOMAIN##/${domain}/g" ${configPath}
+sed -i "s/##DOMAINS##/${domains}/g" ${configPath}
+sed -i "s|##PATH##|${path}|g" ${configPath}
+echo "127.0.0.1		www.${domain}" >> /etc/hosts
+echo "127.0.0.1		${domain}" >> /etc/hosts
+
+service nginx restart
+
+echo "Done!"
