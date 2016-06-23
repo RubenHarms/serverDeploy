@@ -148,6 +148,7 @@ function askQuestion(){
                 break
           fi
 	elif [ "${type}" = "directory" ]; then
+	    input=`realpath ${input}`
             if [[ -d  "$input" ]]; then
                 lastInput=$input;
                 break
