@@ -4,7 +4,7 @@ pushd `dirname $0` > /dev/null
 CURRENT_PATH=`pwd -P`
 popd > /dev/null
 
-wget http://epel.mirror.net.in/epel/6/x86_64/epel-release-6-8.noarch.rpm
+wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 rpm -ivh epel-release-6-8.noarch.rpm
 yum install -y exim
 yum remove sendmail postfix
