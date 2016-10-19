@@ -90,7 +90,7 @@ if [ -d "/var/www/domains/${dir}/etc/nginx/ssl/" ]; then
     cp /var/www/domains/${dir}/etc/nginx/ssl/* /etc/nginx/ssl/
 fi
 
-composer update
+php -d memory_limit=-1 /usr/bin/composer update
 
 if [ -d "/var/www/domains/${dir}/app/cache/" ]; then
     chmod 777 /var/www/domains/${dir}/app/cache/ -R
