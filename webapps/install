@@ -121,9 +121,9 @@ symbolicPhpFpm
 
 service nginx restart
 
-sqlUsername=`cat /var/www/domains/rsaleads/app/config/parameters.yml | grep 'database_user:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
-sqlPassword=`cat /var/www/domains/rsaleads/app/config/parameters.yml | grep 'database_password:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
-sqlDatabase=`cat /var/www/domains/rsaleads/app/config/parameters.yml | grep 'database_name:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
+sqlUsername=`cat /var/www/domains/${dir}/app/config/parameters.yml | grep 'database_user:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
+sqlPassword=`cat /var/www/domains/${dir}/app/config/parameters.yml | grep 'database_password:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
+sqlDatabase=`cat /var/www/domains/${dir}/app/config/parameters.yml | grep 'database_name:' | cut -d ":" -f2 | cut -d " " -f2 | awk '{print $1}'`
 
 echo
 echo "You can add the following SQL grant statement to the SQL server, if the SQL server is in the same local network: "
