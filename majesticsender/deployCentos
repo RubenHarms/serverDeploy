@@ -19,12 +19,11 @@ npm install -g uglify-js
 npm install -g uglifycss
 cd /var/www/domains/majesticsender/
 git clone git@git.e-vence.nl:rsa/MajesticSender.git ./
-composer update
+php -d memory_limit=-1 /usr/bin/composer update
 
 sudo groupadd majesticsender
 sudo useradd majesticsender -g majesticsender -d /var/www/domains/majesticsender;
 chown majesticsender.majesticsender /var/www/domains/majesticsender  -R
-composer update
 /var/run/php5-fpm.sock
  chmod 777 app/cache/ -R
  chmod 777 app/logs/ -R
