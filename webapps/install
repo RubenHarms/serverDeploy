@@ -36,6 +36,7 @@ requireRoot
 
 addSoftware 'MajesticSender' 'majesticsender' 'git@git.e-vence.nl:rsa/MajesticSender.git' 'majesticsender'
 addSoftware 'RSA Leads' 'rsaleads' 'git@git.e-vence.nl:rsa/RsaLeads.git' 'rsaleads'
+addSoftware 'Facturatio' 'facturatio' 'git@git.e-vence.nl:rsa/facturatio.git' 'facturatio'
 
 echo "The following software is available: ";
 showChoices "NAMES"
