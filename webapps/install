@@ -81,7 +81,7 @@ npm install -g uglifycss
 cd /var/www/domains/${dir}/
 
 
-if [ "$profile" = "" ]
+if [ "${profile}" = "" ]
 then
     nginxDir="/var/www/domains/${dir}/etc/nginx/";
     prodPath="/var/www/domains/${dir}/app/config/parameters.yml.prod"
@@ -91,7 +91,7 @@ else
 fi
 
 if [ -f "${prodPath}"  ]; then
-    cp app/config/parameters.yml.prod app/config/parameters.yml
+    cp  ${prodPath} app/config/parameters.yml
 fi
 
 
