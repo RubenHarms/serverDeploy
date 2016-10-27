@@ -10,12 +10,14 @@ NAMES=()
 USERS=()
 REPOSITORIES=()
 FOLDERS=()
+PROFILES=()
 
 function addSoftware () {
     NAMES+=("$1")
     USERS+=("$2")
     REPOSITORIES+=("$3")
     FOLDERS+=("$4")
+    PROFILES+=("$5")
 }
 
 function installComposer(){
@@ -34,9 +36,11 @@ function createGitKey(){
 
 requireRoot
 
-addSoftware 'MajesticSender' 'majesticsender' 'git@git.e-vence.nl:rsa/MajesticSender.git' 'majesticsender'
-addSoftware 'RSA Leads' 'rsaleads' 'git@git.e-vence.nl:rsa/RsaLeads.git' 'rsaleads'
-addSoftware 'Facturatio' 'facturatio' 'git@git.e-vence.nl:rsa/facturatio.git' 'facturatio'
+addSoftware 'MajesticSender' 'majesticsender' 'git@git.e-vence.nl:rsa/MajesticSender.git' 'majesticsender' ''
+addSoftware 'RSA Leads' 'rsaleads' 'git@git.e-vence.nl:rsa/RsaLeads.git' 'rsaleads' ''
+addSoftware 'Facturatio' 'facturatio' 'git@git.e-vence.nl:rsa/facturatio.git' 'facturatio' ''
+addSoftware 'Doublepoints' 'doublepoints' 'git@git.e-vence.nl:HootMarketing/hootmarketingCashback.git' 'doublepoints' 'doublepoints'
+
 
 echo "The following software is available: ";
 showChoices "NAMES"
@@ -47,6 +51,7 @@ askQuestion choices "Which software do you want to install?" 0 "${USERS[@]}"
 dir=${FOLDERS[$lastInput]}
 user=${USERS[$lastInput]}
 repository=${REPOSITORIES[$lastInput]}
+profile=${PROFILES[$lastInput]}
 
 
 sudo mkdir /var/www/domains/${dir} --parents;
@@ -75,20 +80,30 @@ npm install -g uglifycss
 
 cd /var/www/domains/${dir}/
 
-if [ -f "/var/www/domains/${dir}/app/config/parameters.yml.prod"  ]; then
+
+if [ "$profile" = "" ]
+    nginxDir="/var/www/domains/${dir}/etc/nginx/";
+    prodDir="/var/www/domains/${dir}/app/config/parameters.yml.prod"
+else
+    nginxDir="/var/www/domains/${dir}/etc/${profile}/nginx/";
+    prodDir="/var/www/domains/${dir}/app/config/parameters_${profile}.yml.prod"
+fi
+
+if [ -f "${prodDir}"  ]; then
     cp app/config/parameters.yml.prod app/config/parameters.yml
 fi
 
-if [ -d "/var/www/domains/${dir}/etc/nginx/conf.d/" ]; then
-    cp /var/www/domains/${dir}/etc/nginx/conf.d/* /etc/nginx/conf.d/
+
+if [ -d "${nginxDir}/conf.d/" ]; then
+    cp ${nginxDir}/conf.d/* /etc/nginx/conf.d/
 fi
 
 if ! [[ -d "/etc/nginx/ssl" ]]; then
     mkdir /etc/nginx/ssl;
 fi
 
-if [ -d "/var/www/domains/${dir}/etc/nginx/ssl/" ]; then
-    cp /var/www/domains/${dir}/etc/nginx/ssl/* /etc/nginx/ssl/
+if [ -d "${nginxDir}/ssl/" ]; then
+    cp ${nginxDir}/ssl/* /etc/nginx/ssl/
 fi
 
 php -d memory_limit=-1 /usr/bin/composer update
