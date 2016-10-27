@@ -82,14 +82,15 @@ cd /var/www/domains/${dir}/
 
 
 if [ "$profile" = "" ]
+then
     nginxDir="/var/www/domains/${dir}/etc/nginx/";
-    prodDir="/var/www/domains/${dir}/app/config/parameters.yml.prod"
+    prodPath="/var/www/domains/${dir}/app/config/parameters.yml.prod"
 else
     nginxDir="/var/www/domains/${dir}/etc/${profile}/nginx/";
-    prodDir="/var/www/domains/${dir}/app/config/parameters_${profile}.yml.prod"
+    prodPath="/var/www/domains/${dir}/app/config/parameters_${profile}.yml.prod"
 fi
 
-if [ -f "${prodDir}"  ]; then
+if [ -f "${prodPath}"  ]; then
     cp app/config/parameters.yml.prod app/config/parameters.yml
 fi
 
