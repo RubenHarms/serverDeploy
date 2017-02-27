@@ -14,7 +14,6 @@ yum -y remove httpd
 yum install nginx -y
 rm /etc/nginx/nginx.conf -f
 cp ~/serverDeploy/majesticInstance/nginx.conf /etc/nginx/nginx.conf
-service nginx restart
 yum -y groupinstall 'Development Tools'
 yum  -y install nano php56w php56w-opcache php56w-intl php56w-imap php56w-mongo php56w-gd php56w-curl php56w-mysql php56w-fpm php56w-mbstring openssl openssl-devel php56w-pear php56w-devel php56w-mcrypt php56w-soap php56w-bcmath &&
 pecl install mongo
@@ -23,7 +22,6 @@ echo "extension=mongo.so" >> /etc/php.ini
 php -v
 
 
-yum install exim dovecot -y
 
 
 mkdir -p /var/www/domains/majesticproxy
@@ -33,8 +31,12 @@ cd ~/
 git clone https://github.com/MajesticSender/majesticProxy.git
 cp ./majesticProxy/nginx.example.catchall.conf /etc/nginx/conf.d/majesticproxy.conf
 cp ./majesticProxy/app.php /var/www/domains/majesticproxy
-rm /etc/nginx/sites-enabled/default -f
-sudo service nginx restart
+
+
+service nginx restart
+
+yum install exim dovecot -y
+
 
 read -p " Enter user's domain: " domain
 read -p " Enter user's username: " username
