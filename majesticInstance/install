@@ -31,6 +31,8 @@ read -p " Enter user's domain: " domain
 read -p " Enter user's username: " username
 read -sp " Enter password: " passwd
 
+adduser vmail
+
 sudo mkdir /home/vmail/$username@$domain
 sudo chown vmail:vmail /home/vmail/$username@$domain
 sudo chmod go-rwx /home/vmail/$username@$domain
