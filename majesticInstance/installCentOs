@@ -60,5 +60,6 @@ systemctl restart exim
 systemctl enable dovecot
 systemctl restart dovecot
 
-useradd vmail -g mail -d /home/vmail
+groupadd vmail
+useradd vmail -g vmail -d /home/vmail
 sh ~/serverDeploy/majesticInstance/createUser
