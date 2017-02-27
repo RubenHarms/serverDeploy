@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo yum update
-sudo yum install git -y &&
+sudo yum install git -y
 git clone https://github.com/RubenHarms/serverDeploy.git ~/serverDeploy
 cd ~/serverDeploy/majesticInstance
 chmod +x installCentOs
