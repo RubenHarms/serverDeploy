@@ -7,7 +7,7 @@ popd > /dev/null
 . ${CURRENT_PATH}/../include/main
 
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-rpm -Uvh https://mirror.webtatic.com/yum/el7/latest.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 sudo yum install epel-release
 
 yum -y remove httpd
