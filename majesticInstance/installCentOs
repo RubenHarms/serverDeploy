@@ -32,15 +32,15 @@ cp ./majesticProxy/app.php /var/www/domains/majesticproxy
 rm  /etc/php-fpm.d/www.conf -f
 cp ~/serverDeploy/majesticInstance/www.conf /etc/php-fpm.d/www.conf
 
-service nginx restart &&
-service php-fpm restart &&
+service nginx restart
+service php-fpm restart 
 
-systemctl enable nginx &&
-systemctl enable php-fpm &&
-systemctl disable iptables &&
+systemctl enable nginx
+systemctl enable php-fpm
+systemctl disable iptables
 systemctl stop iptables &&
 
-yum install exim dovecot -y &&
+yum install exim dovecot -y
 
 rm /etc/dovecot/dovecot.conf -f
 rm /etc/exim/exim.conf -f
