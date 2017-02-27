@@ -28,5 +28,5 @@ wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/majes
 CentOS 7
 
 ``` 
-bash < (wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/majesticInstance/installScratchCentOs)
+bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/majesticInstance/installScratchCentOs)
 ```
