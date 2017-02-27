@@ -35,7 +35,7 @@ cp ./majesticProxy/app.php /var/www/domains/majesticproxy
 
 service nginx restart
 
-yum install exim dovecot -y
+yum install exim dovecot -y &&
 
 
 read -p " Enter user's domain: " domain
