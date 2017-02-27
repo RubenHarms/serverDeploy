@@ -2,6 +2,7 @@
 sudo apt-get update
 sudo apt-get install git -y
 cd ~/
-git clone https://github.com/RubenHarms/serverDeploy.git
-cd serverDeploy
-bash ~/serverDeploy/majesticInstance/install
+git clone https://github.com/RubenHarms/serverDeploy.git 
+cd ~/serverDeploy/majesticInstance
+chmod +x install
+./install
