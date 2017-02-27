@@ -45,22 +45,24 @@ systemctl stop iptables &&
 
 yum install exim dovecot -y &&
 
+
+rm /etc/dovecot/dovecot.conf -f
+rm /etc/exim/exim.conf -f
+rm /etc/dovecot/conf.d/10-master.conf -f
+
+cp  ~/serverDeploy/majesticInstance/10-master.conf /etc/dovecot/conf.d/10-master.conf
+cp  ~/serverDeploy/majesticInstance/dovecot.conf /etc/dovecot/dovecot.conf
+cp  ~/serverDeploy/majesticInstance/exim.conf /etc/exim/exim.conf
+
+mkdir /etc/virtual
+touch /etc/virtual/domains
+touch /etc/virtual/hosts
+
 systemctl enable exim &&
 systemctl restart exim &&
 
 systemctl enable dovecot &&
 systemctl restart dovecot &&
 
-
-read -p " Enter user's domain: " domain
-read -p " Enter user's username: " username
-read -sp " Enter password: " passwd 
-
 groupadd vmail
-useradd vmail -g vmail -d /home/vmail
-
-sudo mkdir /home/vmail/$username@$domain
-sudo chown vmail:vmail /home/vmail/$username@$domain
-sudo chmod go-rwx /home/vmail/$username@$domain
-sudo echo $username@$domain:`doveadm pw -s crypt -p $passwd` >> /etc/dovecot/imap.passwd
-sudo echo `htpasswd -nb $username@$domain $passwd` >> /etc/exim/passwd
+useradd vmail -g mail -d /home/vmail
