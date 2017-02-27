@@ -37,8 +37,16 @@ cp ./majesticProxy/app.php /var/www/domains/majesticproxy
 service nginx restart
 systemctl enable nginx
 systemctl enable php-fpm
+systemctl disable iptables
+systemctl stop iptables
 
 yum install exim dovecot -y &&
+
+systemctl enable exim
+systemctl restart exim
+
+systemctl enable dovecot
+systemctl restart dovecot
 
 
 read -p " Enter user's domain: " domain
