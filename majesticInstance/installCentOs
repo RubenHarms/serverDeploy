@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+. ${CURRENT_PATH}/../include/main
+
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
+yum install nginx -y
+yum -y groupinstall 'Development Tools'
+yum  -y install nano php56w php56w-opcache php56w-intl php56w-imap php56w-mongo php56w-gd php56w-curl php56w-mysql php56w-fpm php56w-mbstring openssl openssl-devel php56w-pear php56w-devel php56w-mcrypt php56w-soap php56w-bcmath
+pecl install mongo
+echo "" >> /etc/php.ini
+echo "extension=mongo.so" >> /etc/php.ini
+php -v
+
+yum install exim dovecot -y
+
+
+mkdir -p /var/www/domains/majesticproxy
+chown nginx.nginx /var/www/domains/majesticproxy
+
+cd ~/
+git clone https://github.com/MajesticSender/majesticProxy.git
+cp ./majesticProxy/nginx.example.catchall.conf /etc/nginx/conf.d/majesticproxy.conf
+cp ./majesticProxy/app.php /var/www/domains/majesticproxy
+rm /etc/nginx/sites-enabled/default -f
+sudo service nginx restart
+
+read -p " Enter user's domain: " domain
+read -p " Enter user's username: " username
+read -sp " Enter password: " passwd
+
+groupadd vmail
+useradd vmail -g vmail -d /home/vmail
+sudo mkdir /home/vmail
+sudo chown vmail:vmail /home/vmail
+
+
+sudo mkdir /home/vmail/$username@$domain
+sudo chown vmail:vmail /home/vmail/$username@$domain
+sudo chmod go-rwx /home/vmail/$username@$domain
+sudo echo $username@$domain:`dovecotpw -s crypt -p $passwd` >> /etc/dovecot/imap.passwd
+sudo echo `htpasswd -nb $username@$domain $passwd` >> /etc/exim4/passwd
