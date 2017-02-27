@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+. ${CURRENT_PATH}/../include/main
+
+sudo apt-get update
+sudo apt-get install nano ntp git build-essential software-properties-common dnsutils curl -y
+sudo apt-get install nginx -y
+sudo add-apt-repository ppa:ondrej/php -y
+sudo apt-get update
+sudo apt-get install python-software-properties -y 
+sudo apt-get update
+sudo apt-get install php5.6-fpm php5.6-intl php5.6-imap php5.6-mongo php5.6-gd php5.6-curl php5.6-mysql php5.6-mcrypt php5.6-mbstring php5.6-zip php5.6-xml php5.6-soap php5.6-bcmath -y --force-yes
+sudo apt-get install exim4 dovecot-imapd dovecot-pop3d -y
+apt-get remove apache2 -y
+
+mkdir -p /var/www/domains/majesticproxy
+chown nginx.nginx /var/www/domains/majesticproxy
+
+cd ~/
+git clone https://github.com/MajesticSender/majesticProxy.git
+cp ./majesticProxy/nginx.example.catchall.conf /etc/nginx/conf.d/majesticproxy.conf
+cp ./majesticProxy/app.php /var/www/domains/majesticproxy
+rm /etc/nginx/sites-enabled/default -f
+sudo service nginx restart
