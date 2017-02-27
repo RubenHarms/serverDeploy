@@ -33,6 +33,8 @@ read -sp " Enter password: " passwd
 
 adduser vmail
 sudo mkdir /home/vmail
+sudo chown vmail:vmail /home/vmail
+
 
 sudo mkdir /home/vmail/$username@$domain
 sudo chown vmail:vmail /home/vmail/$username@$domain
