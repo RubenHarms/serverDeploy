@@ -30,11 +30,14 @@ chown nginx.nginx /var/www/domains/majesticproxy
 
 cd ~/
 git clone https://github.com/MajesticSender/majesticProxy.git
-cp ./majesticProxy/nginx.example.catchall.conf /etc/nginx/conf.d/majesticproxy.conf
+cp ~/serverDeploy/majesticInstance/majesticproxy.loc.conf /etc/nginx/conf.d/majesticproxy.conf
 cp ./majesticProxy/app.php /var/www/domains/majesticproxy
-
+rm  /etc/php-fpm.d/www.conf -f
+cp ~/serverDeploy/majesticInstance/www.conf /etc/php-fpm.d/www.conf
 
 service nginx restart
+service php-fpm restart
+
 systemctl enable nginx
 systemctl enable php-fpm
 systemctl disable iptables
