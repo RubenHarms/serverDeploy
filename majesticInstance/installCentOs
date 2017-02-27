@@ -35,26 +35,26 @@ cp ./majesticProxy/app.php /var/www/domains/majesticproxy
 rm  /etc/php-fpm.d/www.conf -f
 cp ~/serverDeploy/majesticInstance/www.conf /etc/php-fpm.d/www.conf
 
-service nginx restart
-service php-fpm restart
+service nginx restart &&
+service php-fpm restart &&
 
-systemctl enable nginx
-systemctl enable php-fpm
-systemctl disable iptables
-systemctl stop iptables
+systemctl enable nginx &&
+systemctl enable php-fpm &&
+systemctl disable iptables &&
+systemctl stop iptables &&
 
 yum install exim dovecot -y &&
 
-systemctl enable exim
-systemctl restart exim
+systemctl enable exim &&
+systemctl restart exim &&
 
-systemctl enable dovecot
-systemctl restart dovecot
+systemctl enable dovecot &&
+systemctl restart dovecot &&
 
 
 read -p " Enter user's domain: " domain
 read -p " Enter user's username: " username
-read -sp " Enter password: " passwd
+read -sp " Enter password: " passwd 
 
 groupadd vmail
 useradd vmail -g vmail -d /home/vmail

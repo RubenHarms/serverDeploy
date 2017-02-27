@@ -1,0 +1,12 @@
+#!/bin/sh
+# Steps to make new mail user:
+
+read -p " Enter user's domain: " domain
+read -p " Enter user's username: " username
+read -sp " Enter password: " passwd
+
+sudo mkdir /home/vmail/$username@$domain
+sudo chown vmail:vmail /home/vmail/$username@$domain
+sudo chmod go-rwx /home/vmail/$username@$domain
+sudo echo $username@$domain:`doveadm pw -s crypt -p $passwd` >> /etc/dovecot/imap.passwd
+sudo echo `htpasswd -nb $username@$domain $passwd` >> /etc/exim/passwd
