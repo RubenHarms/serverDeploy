@@ -9,6 +9,8 @@ popd > /dev/null
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 rpm -Uvh https://mirror.webtatic.com/yum/el7/latest.rpm
 sudo yum install epel-release
+
+yum -y remove httpd
 yum install nginx -y
 rm /etc/nginx/nginx.conf -f
 cp ~/serverDeploy/majesticInstance/nginx.conf /etc/nginx/nginx.conf
