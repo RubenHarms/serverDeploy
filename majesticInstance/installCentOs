@@ -16,7 +16,7 @@ rm /etc/nginx/nginx.conf -f
 cp ~/serverDeploy/majesticInstance/nginx.conf /etc/nginx/nginx.conf
 yum -y install net-tools
 yum -y groupinstall 'Development Tools'
-yum  -y install nano php56w php56w-opcache php56w-intl php56w-imap php56w-mongo php56w-gd php56w-curl php56w-mysql php56w-fpm php56w-mbstring openssl openssl-devel php56w-pear php56w-devel php56w-mcrypt php56w-soap php56w-bcmath &&
+yum  -y install nano php56w-common php56w-opcache php56w-intl php56w-imap php56w-mongo php56w-gd php56w-curl php56w-mysql php56w-fpm php56w-mbstring openssl openssl-devel php56w-pear php56w-devel php56w-mcrypt php56w-soap php56w-bcmath &&
 pecl install mongo
 echo "" >> /etc/php.ini
 echo "extension=mongo.so" >> /etc/php.ini
@@ -35,6 +35,8 @@ cp ./majesticProxy/app.php /var/www/domains/majesticproxy
 
 
 service nginx restart
+systemctl enable nginx
+systemctl enable php-fpm
 
 yum install exim dovecot -y &&
 
