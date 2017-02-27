@@ -49,12 +49,12 @@ systemctl enable exim
 systemctl restart exim
 
 systemctl enable dovecot
-systemctl restart dovecot
+systemctl restart dovecot &&
 
 
 read -p " Enter user's domain: " domain
 read -p " Enter user's username: " username
-read -sp " Enter password: " passwd &&
+read -sp " Enter password: " passwd 
 
 groupadd vmail
 useradd vmail -g vmail -d /home/vmail
