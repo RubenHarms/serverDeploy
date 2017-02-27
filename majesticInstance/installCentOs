@@ -38,7 +38,7 @@ service php-fpm restart
 systemctl enable nginx
 systemctl enable php-fpm
 systemctl disable iptables
-systemctl stop iptables &&
+systemctl stop iptables
 
 yum install exim dovecot -y
 
