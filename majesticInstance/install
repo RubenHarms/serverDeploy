@@ -26,3 +26,13 @@ cp ./majesticProxy/nginx.example.catchall.conf /etc/nginx/conf.d/majesticproxy.c
 cp ./majesticProxy/app.php /var/www/domains/majesticproxy
 rm /etc/nginx/sites-enabled/default -f
 sudo service nginx restart
+
+read -p " Enter user's domain: " domain
+read -p " Enter user's username: " username
+read -sp " Enter password: " passwd
+
+sudo mkdir /home/vmail/$username@$domain
+sudo chown vmail:vmail /home/vmail/$username@$domain
+sudo chmod go-rwx /home/vmail/$username@$domain
+sudo echo $username@$domain:`dovecotpw -s crypt -p $passwd` >> /etc/dovecot/imap.passwd
+sudo echo `htpasswd -nb $username@$domain $passwd` >> /etc/exim4/passwd
