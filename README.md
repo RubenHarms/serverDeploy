@@ -20,5 +20,5 @@ cd serverDeploy
 MajesticInstance:
 
 ``` 
-wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/majesticInstance/install | bash
+wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/majesticInstance/installScratch | bash
 ```
