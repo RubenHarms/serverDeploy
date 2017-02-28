@@ -65,6 +65,7 @@ groupadd vmail
 useradd vmail -g vmail -d /home/vmail
 chown vmail.mail /var/mail/
 usermod -a -G vmail exim
+chmod 750 /home/vmail/
 
 cd ~/
 git clone http://git.e-vence.nl/rsa/serverAPI.git
