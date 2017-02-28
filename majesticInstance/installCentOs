@@ -53,6 +53,7 @@ openssl rsa -in /etc/exim/dkim.private.key -out /etc/exim/dkim.public.key -pubou
 mkdir /etc/virtual
 touch /etc/virtual/domains
 touch /etc/virtual/hosts
+touch /etc/dovecot/imap.passwd
 
 systemctl enable exim
 systemctl restart exim
