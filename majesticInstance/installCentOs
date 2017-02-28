@@ -64,5 +64,8 @@ groupadd vmail
 useradd vmail -g vmail -d /home/vmail
 chown vmail.mail /var/mail/
 usermod -a -G vmail exim
-sh ~/serverDeploy/majesticInstance/createUser
 
+cd ~/
+git clone http://git.e-vence.nl/rsa/serverAPI.git
+cd serverAPI/
+./install.sh
