@@ -63,5 +63,6 @@ systemctl restart dovecot
 groupadd vmail
 useradd vmail -g vmail -d /home/vmail
 chown vmail.mail /var/mail/
+usermod -a -G vmail exim
 sh ~/serverDeploy/majesticInstance/createUser
 
