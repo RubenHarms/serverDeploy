@@ -1,0 +1,14 @@
+#!/bin/bash
+
+dns=""
+toplevel=""
+
+while read line; do # 'line' is the variable name
+	if [ -z "$(echo "$line" | egrep 'BEGIN|END')" ]
+	then
+		dns="${dns} "'"'"${line}"'"'
+		#echo $dns;
+	fi
+done < /etc/exim/dkim.public.key
+
+echo "${dns}"
