@@ -4,8 +4,8 @@ pushd `dirname $0` > /dev/null
 CURRENT_PATH=`pwd -P`
 popd > /dev/null
 
-
-dnstemplate=""
+NEWLINE=$'\n'
+dnsTemplate=""
 ipadress=(`hostname -I`)
 alphabeth=( 0 a b c d e f g h i j k l m n o p q r s t u v w x y z)
 relayHosts="213.187.247.10 : 213.187.241.70 : 213.187.242.79 : 85.222.227.115 : 87.120.37.146 : 87.121.52.43 : 37.153.224.208"
@@ -31,6 +31,7 @@ do
  if [ "$ip" != "127.0.0.1" ] 
  then
 	echo "${servername}${alphabeth[i]}.${toplevel}:	${ip}" >> /etc/virtual/helo_data
+	dnsTemplate="${dnsTemplate}${NEWLINE}${servername}${alphabeth[i]}	IN	A	${ip}"
  fi
 done
 
@@ -56,8 +57,10 @@ while read line; do # 'line' is the variable name
         fi
 done < /etc/exim/dkim.public.key
 
-dnsTemplate=""
 
 
+dnsTemplate="${dnsTemplate}${NEWLINE}${servername}._domainkey	IN      A       ${dns}"
+
+echo "$dnsTemplate"
 
 
