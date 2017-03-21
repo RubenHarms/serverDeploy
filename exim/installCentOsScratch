@@ -2,6 +2,6 @@
 yum -y update
 yum install git -y
 git clone https://github.com/RubenHarms/serverDeploy.git ~/serverDeploy
-cd ~/serverDeploy/majesticInstance
-chmod +x installCentOs
+cd ~/serverDeploy/exim
+chmod +x deployRedHat
 ./deployRedHat
