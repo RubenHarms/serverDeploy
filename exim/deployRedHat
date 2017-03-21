@@ -25,13 +25,19 @@ cp $CURRENT_PATH/config/* / -rf
 
 NEWLINE=$'\n'
 dnsTemplate=""
+reversedDns=""
 spfRecord=""
 ipadress=(`hostname -I`)
 alphabeth=( 0 a b c d e f g h i j k l m n o p q r s t u v w x y z)
 relayHosts="213.187.247.10 : 213.187.241.70 : 213.187.242.79 : 85.222.227.115 : 87.120.37.146 : 87.121.52.43 : 37.153.224.208 : 185.110.173.241"
 
-echo -n "Vul het toplevel domeinnaam in (bijv mxcompute.com): "
+echo -n "Vul het toplevel domeinnaam in [mxcompute.com]: "
 read toplevel
+
+if [ -z "$toplevel" ]
+then
+	toplevel="mxcompute.com"
+fi;
 
 echo -n "Vul de naam van de server in (bijvoorbeeld s1): "
 read servername
@@ -57,6 +63,7 @@ do
  then
 	echo "${servername}${alphabeth[i]}.${toplevel}:	${ip}" >> /etc/virtual/helo_data
 	dnsTemplate="${dnsTemplate}${NEWLINE}${servername}${alphabeth[i]}	IN	A	${ip}"
+	reversedDns="${reversedDns}${NEWLINE}${ip}: ${servername}${alphabeth[i]}.${toplevel}"
 	spfRecord="${spfRecord} ipv4:${ip}"
  fi
 done
@@ -107,5 +114,11 @@ extra=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.c
 
 echo "Repace the SPF text record for: "
 echo "---------------------------------------"
-echo "$txtRecord.	IN      TXT       ${record} "'"'"${spfRecord}"'"'"${extra}"'"'
+echo "$txtRecord.	IN      TXT       ${record} "'"'"${spfRecord} ${extra}"'"'
+echo "---------------------------------------"
+echo ""
+
+echo "Set the following reversed dns: "
+echo "---------------------------------------"
+echo  "${reversedDns}"
 echo "---------------------------------------"
