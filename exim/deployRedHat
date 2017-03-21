@@ -25,6 +25,7 @@ cp $CURRENT_PATH/config/* / -rf
 
 NEWLINE=$'\n'
 dnsTemplate=""
+spfRecord=""
 ipadress=(`hostname -I`)
 alphabeth=( 0 a b c d e f g h i j k l m n o p q r s t u v w x y z)
 relayHosts="213.187.247.10 : 213.187.241.70 : 213.187.242.79 : 85.222.227.115 : 87.120.37.146 : 87.121.52.43 : 37.153.224.208 : 185.110.173.241"
@@ -56,6 +57,7 @@ do
  then
 	echo "${servername}${alphabeth[i]}.${toplevel}:	${ip}" >> /etc/virtual/helo_data
 	dnsTemplate="${dnsTemplate}${NEWLINE}${servername}${alphabeth[i]}	IN	A	${ip}"
+	spfRecord="${spfRecord} ipv4:${ip}"
  fi
 done
 
@@ -90,4 +92,20 @@ echo ""
 echo "Add the following record to each sender domain: "
 echo "---------------------------------------"
 echo  "${servername}._domainkey	IN      TXT       ${dns}"
+echo "---------------------------------------"
+
+echo -n "Vul het txt record domeinnaam in [correo.mxcompute.com]: "
+read txtRecord
+if [ -z "$txtRecord" ]
+then
+	txtRecord="correo.mxcompute.com"
+fi;
+
+record=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.com\stext\s=\s\(.*\) \(\W*all\)\s*\"/\1/p"`
+extra=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.com\stext\s=\s\(.*\) \(\W*all\)\s*\"/\1/p"`
+
+
+echo "Repace the SPF text record for: "
+echo "---------------------------------------"
+echo "$txtRecord.	IN      TXT       ${record} "'"'"${spfRecord}${extra}"'"'
 echo "---------------------------------------"
