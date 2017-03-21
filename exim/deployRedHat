@@ -64,7 +64,7 @@ do
 	echo "${servername}${alphabeth[i]}.${toplevel}:	${ip}" >> /etc/virtual/helo_data
 	dnsTemplate="${dnsTemplate}${NEWLINE}${servername}${alphabeth[i]}	IN	A	${ip}"
 	reversedDns="${reversedDns}${NEWLINE}${ip}: ${servername}${alphabeth[i]}.${toplevel}"
-	spfRecord="${spfRecord} ipv4:${ip}"
+	spfRecord="${spfRecord} ip4:${ip}"
  fi
 done
 
