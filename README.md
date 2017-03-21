@@ -37,5 +37,5 @@ bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/maste
 CentOS 7
 
 ``` 
-bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/exim/installScratchCentOs)
+bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/exim/installCentOsScratch)
 ```
