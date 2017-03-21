@@ -107,5 +107,5 @@ extra=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.c
 
 echo "Repace the SPF text record for: "
 echo "---------------------------------------"
-echo "$txtRecord.	IN      TXT       ${record} "'"'"${spfRecord}${extra}"'"'
+echo "$txtRecord.	IN      TXT       ${record} "'"'"${spfRecord}"'"'"${extra}"'"'
 echo "---------------------------------------"
