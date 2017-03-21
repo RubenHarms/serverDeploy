@@ -4,4 +4,4 @@ yum install git -y
 git clone https://github.com/RubenHarms/serverDeploy.git ~/serverDeploy
 cd ~/serverDeploy/majesticInstance
 chmod +x installCentOs
-./deployRedhat
+./deployRedHat
