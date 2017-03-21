@@ -60,6 +60,7 @@ done
 
 
 sed -i.bak s/##RELAY_HOSTS##/"${relayHosts}"/g /etc/exim/exim.conf
+sed -i.bak s/##DKIM_SELECTOR##/"${servername}"/g /etc/exim/exim.conf
 
 
 
@@ -78,6 +79,14 @@ done < /etc/exim/dkim.public.key
 
 
 
-dnsTemplate="${dnsTemplate}${NEWLINE}${servername}._domainkey	IN      A       ${dns}"
-
+echo "Add the following records to the DNS of ${toplevel}:"
+echo "---------------------------------------"
 echo "$dnsTemplate"
+echo "---------------------------------------"
+echo ""
+
+
+echo "Add the following record to each sender domain: "
+echo "---------------------------------------"
+echo  "${servername}._domainkey	IN      TXT       ${dns}"
+echo "---------------------------------------"
