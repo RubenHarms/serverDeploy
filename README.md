@@ -17,7 +17,7 @@ cd serverDeploy
 ```
 
 
-MajesticInstance:
+## MajesticInstance:
 
 Ubuntu 14.04 LTS 64bit
 
@@ -29,4 +29,13 @@ CentOS 7
 
 ``` 
 bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/majesticInstance/installScratchCentOs)
+```
+
+## Exim:
+
+
+CentOS 7
+
+``` 
+bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/exim/installScratchCentOs)
 ```
