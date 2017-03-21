@@ -16,3 +16,62 @@ service exim start
 
 cp /etc/exim/exim.conf /etc/exim/exim.conf.org
 cp $CURRENT_PATH/config/* / -rf
+
+NEWLINE=$'\n'
+dnsTemplate=""
+ipadress=(`hostname -I`)
+alphabeth=( 0 a b c d e f g h i j k l m n o p q r s t u v w x y z)
+relayHosts="213.187.247.10 : 213.187.241.70 : 213.187.242.79 : 85.222.227.115 : 87.120.37.146 : 87.121.52.43 : 37.153.224.208"
+
+echo -n "Vul het toplevel domeinnaam in (bijv mxcompute.com): "
+read toplevel
+
+echo -n "Vul de naam van de server in (bijvoorbeeld s1): "
+read servername
+
+echo -n "Geef relay hosts op [${relayHosts}]: "
+read relay
+
+if [ -z "$relay" ]
+then
+	relayHosts=$relay
+fi;
+
+
+for ((i = 0; i < ${#ipadress[@]}; i++))
+do
+ ip=${ipadress[i]};
+ if [ "$ip" != "127.0.0.1" ] 
+ then
+	echo "${servername}${alphabeth[i]}.${toplevel}:	${ip}" >> /etc/virtual/helo_data
+	dnsTemplate="${dnsTemplate}${NEWLINE}${servername}${alphabeth[i]}	IN	A	${ip}"
+ fi
+done
+
+if [ ! -f "/etc/virtual" ]
+then
+	mkdir -p /etc/virtual
+fi
+
+sed -i.bak s/##RELAY_HOSTS##/"${relayHosts}"/g /etc/exim/exim.conf
+
+
+
+openssl genrsa -out /etc/exim/dkim.private.key 1024 
+openssl rsa -in /etc/exim/dkim.private.key -out /etc/exim/dkim.public.key -pubout -outform PEM 
+
+
+dns=""
+
+while read line; do # 'line' is the variable name
+        if [ -z "$(echo "$line" | egrep 'BEGIN|END')" ]
+        then
+            	dns="${dns} "'"'"${line}"'"'
+        fi
+done < /etc/exim/dkim.public.key
+
+
+
+dnsTemplate="${dnsTemplate}${NEWLINE}${servername}._domainkey	IN      A       ${dns}"
+
+echo "$dnsTemplate"
