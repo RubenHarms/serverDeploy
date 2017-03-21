@@ -68,7 +68,7 @@ openssl genrsa -out /etc/exim/dkim.private.key 1024
 openssl rsa -in /etc/exim/dkim.private.key -out /etc/exim/dkim.public.key -pubout -outform PEM 
 
 
-dns=""
+dns='"'"v=DKIM1; p="'"'
 
 while read line; do # 'line' is the variable name
         if [ -z "$(echo "$line" | egrep 'BEGIN|END')" ]
