@@ -4,9 +4,14 @@ pushd `dirname $0` > /dev/null
 CURRENT_PATH=`pwd -P`
 popd > /dev/null
 
-wget http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
-rpm -ivh epel-release-7-9.noarch.rpm
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+sudo yum install epel-release
+
+yum -y install net-tools
+yum -y groupinstall 'Development Tools'
 yum install -y exim
+
 yum remove sendmail postfix
 service postfix stop
 chkconfig postfix off
