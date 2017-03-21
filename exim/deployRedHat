@@ -9,6 +9,7 @@ rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 sudo yum install epel-release
 
 yum -y install net-tools
+yum -y install bind-utils
 yum -y groupinstall 'Development Tools'
 yum install -y exim
 
