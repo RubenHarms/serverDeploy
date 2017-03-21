@@ -102,7 +102,7 @@ then
 fi;
 
 record=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.com\stext\s=\s\(.*\) \(\W*all\)\s*\"/\1/p"`
-extra=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.com\stext\s=\s\(.*\) \(\W*all\)\s*\"/\1/p"`
+extra=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.com\stext\s=\s\(.*\) \(\W*all\)\s*\"/\2/p"`
 
 
 echo "Repace the SPF text record for: "
