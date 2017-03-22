@@ -1,4 +1,4 @@
-\#!/bin/bash
+#!/bin/bash
 
 pushd `dirname $0` > /dev/null
 CURRENT_PATH=`pwd -P`
@@ -44,10 +44,10 @@ do
 	echo "INSERT INTO \`majesticsender\`.\`account_smtp_server\` SELECT NULL as id, '${accountId}' as account_id, id as smtp_server_id  FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1;"
 
 	echo "INSERT INTO \`majesticsender\`.\`walker\` (\`smtp_server_id\`, \`name\`, \`number\`, \`providerFilterType\`, \`createdAt\`, \`updatedAt\`, \`priority\`, \`processDirectMails\`, \`processTestMails\`, \`processBroadcastMails\`, \`processFollowUpMails\`, \`group_id\`) VALUES ((SELECT id FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1), '${hostName} - Skynet', '150', 'include', '${date}', '${date}', '0', '1', '1', '1', '1', (SELECT id FROM majesticsender.walker_group WHERE name = '${serverName} - Skynet' ORDER BY id DESC LIMIT 1));"
-        echo "INSERT INTO \`majesticsender\`.\`account_walker\` SELECT NULL as id, '${accountId}' as account_id, id as walker_id  FROM \`majesticsender\`.\`walker\` WHERE name = '${hostName} - Skynet' ORDER BY ID DESC LIMIT 1;
+        echo "INSERT INTO \`majesticsender\`.\`account_walker\` SELECT NULL as id, '${accountId}' as account_id, id as walker_id  FROM \`majesticsender\`.\`walker\` WHERE name = '${hostName} - Skynet' ORDER BY ID DESC LIMIT 1;";
 
 	echo "INSERT INTO \`majesticsender\`.\`walker\` (\`smtp_server_id\`, \`name\`, \`number\`, \`providerFilterType\`, \`createdAt\`, \`updatedAt\`, \`priority\`, \`processDirectMails\`, \`processTestMails\`, \`processBroadcastMails\`, \`processFollowUpMails\`, \`group_id\`) VALUES ((SELECT id FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1), '${hostName}', '150', 'exclude', '${date}', '${date}', '0', '1', '1', '1', '1', (SELECT id FROM majesticsender.walker_group WHERE name = '${serverName}' ORDER BY id DESC LIMIT 1));"
-        echo "INSERT INTO \`majesticsender\`.\`account_walker\` SELECT NULL as id, '${accountId}' as account_id, id as walker_id  FROM \`majesticsender\`.\`walker\` WHERE name = '${hostName}' ORDER BY ID DESC LIMIT 1;
+        echo "INSERT INTO \`majesticsender\`.\`account_walker\` SELECT NULL as id, '${accountId}' as account_id, id as walker_id  FROM \`majesticsender\`.\`walker\` WHERE name = '${hostName}' ORDER BY ID DESC LIMIT 1;";
 
 
 	walkerLists=(${lists[l]})
