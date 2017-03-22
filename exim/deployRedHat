@@ -34,7 +34,7 @@ relayHosts="213.187.247.10 : 213.187.241.70 : 213.187.242.79 : 85.222.227.115 : 
 echo -n "Vul het toplevel domeinnaam in [mxcompute.com]: "
 read toplevel
 
-if [ -z "$toplevel" ]
+if [ ! -z "$toplevel" ]
 then
 	toplevel="mxcompute.com"
 fi;
