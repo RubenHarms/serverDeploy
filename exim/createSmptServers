@@ -1,4 +1,4 @@
-#!/bin/bash
+\#!/bin/bash
 
 pushd `dirname $0` > /dev/null
 CURRENT_PATH=`pwd -P`
@@ -7,7 +7,7 @@ popd > /dev/null
 NEWLINE=$'\n'
 ipadress=(`hostname -I`)
 alphabeth=( 0 a b c d e f g h i j k l m n o p q r s t u v w x y z)
-lists=( 11 14 23,16 27 30 29 )
+lists=( "11" "14" "23 16" "27" "30" "29" )
 
 echo -n "Vul het account ID in: "
 read accountId
@@ -23,28 +23,45 @@ fi
 
 
 date=`date +"%Y-%m-%d %H:%M:%S"`
-
+dateShift=`date +"%Y-%m-%d" -d "+1 day"`" 08:00:00"
 
 echo "#### Algemene server SQL ###"
-echo "INSERT INTO \`majesticsender\`.\`walker_group\` (\`name\`, \`disabled\`, \`strategy\`, \`strategyStartAt\`, \`strategyFrequency\`, \`strategyShiftTotal\`, \`strategyLastAt\`, \`strategyShiftOrder\`) VALUES ('${serverName}', '0', 'shift_lists', '${date}', '86400', NULL, NULL, 'forward');"
-echo "INSERT INTO \`majesticsender\`.\`walker_group\` (\`name\`, \`disabled\`, \`strategy\`, \`strategyStartAt\`, \`strategyFrequency\`, \`strategyShiftTotal\`, \`strategyLastAt\`, \`strategyShiftOrder\`) VALUES ('${serverName} - Skynet', '0', 'shift_lists', '${date}', '86400', NULL, NULL, 'forward');"
+echo "INSERT INTO \`majesticsender\`.\`walker_group\` (\`name\`, \`disabled\`, \`strategy\`, \`strategyStartAt\`, \`strategyFrequency\`, \`strategyShiftTotal\`, \`strategyLastAt\`, \`strategyShiftOrder\`) VALUES ('${serverName}', '0', 'shift_lists', '${dateShift}', '86400', NULL, NULL, 'forward');"
+echo "INSERT INTO \`majesticsender\`.\`walker_group\` (\`name\`, \`disabled\`, \`strategy\`, \`strategyStartAt\`, \`strategyFrequency\`, \`strategyShiftTotal\`, \`strategyLastAt\`, \`strategyShiftOrder\`) VALUES ('${serverName} - Skynet', '0', 'shift_lists', '${dateShift}', '86400', NULL, NULL, 'forward');"
 
 
-
+l=0;
 for ((i = 0; i < ${#ipadress[@]}; i++))
 do
  ip=${ipadress[i]};
  if [ "$ip" != "127.0.0.1" ] 
  then
+
 	hostName=${serverName}${alphabeth[i]}
 
 	echo "####### SQL VOOR ${hostName} #######"
 	echo "INSERT INTO \`majesticsender\`.\`smtp_server\` (\`host\`, \`email\`, \`username\`, \`password\`, \`secured\`, \`name\`, \`createdAt\`, \`updatedAt\`, \`port\`, \`rsapi_host\`, \`rsapi_port\`, \`rsapi_key\`, \`rsapi_secret\`, \`protocol\`) VALUES ('${ip}', '', '${ip}', 'a', '0', '${hostName}', '${date}', '${date}', '25', '${ip}', '2001', 'TBmMWEzY2EwZ', '152ef2ec6c4b35a5', 'smtp');"
 	echo "INSERT INTO \`majesticsender\`.\`account_smtp_server\` SELECT NULL as id, '${accountId}' as account_id, id as smtp_server_id  FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1;"
 
-	echo "INSERT INTO \`majesticsender\`.\`walker\` (\`smtp_server_id\`, \`name\`, \`number\`, \`providerFilterType\`, \`createdAt\`, \`updatedAt\`, \`priority\`, \`processDirectMails\`, \`processTestMails\`, \`processBroadcastMails\`, \`processFollowUpMails\`, \`group_id\`) VALUES ((SELECT id FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1), '${hostName} - Skynet', '150', 'exclude', '${date}', '${date}', '0', '1', '1', '1', '1', (SELECT id FROM majesticsender.walker_group WHERE name = '${serverName} - Skynet' ORDER BY id DESC LIMIT 1));"
-	echo "INSERT INTO \`majesticsender\`.\`walker\` (\`smtp_server_id\`, \`name\`, \`number\`, \`providerFilterType\`, \`createdAt\`, \`updatedAt\`, \`priority\`, \`processDirectMails\`, \`processTestMails\`, \`processBroadcastMails\`, \`processFollowUpMails\`, \`group_id\`) VALUES ((SELECT id FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1), '${hostName}', '150', 'exclude', '${date}', '${date}', '0', '1', '1', '1', '1', (SELECT id FROM majesticsender.walker_group WHERE name = '${serverName}' ORDER BY id DESC LIMIT 1));"
+	echo "INSERT INTO \`majesticsender\`.\`walker\` (\`smtp_server_id\`, \`name\`, \`number\`, \`providerFilterType\`, \`createdAt\`, \`updatedAt\`, \`priority\`, \`processDirectMails\`, \`processTestMails\`, \`processBroadcastMails\`, \`processFollowUpMails\`, \`group_id\`) VALUES ((SELECT id FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1), '${hostName} - Skynet', '150', 'include', '${date}', '${date}', '0', '1', '1', '1', '1', (SELECT id FROM majesticsender.walker_group WHERE name = '${serverName} - Skynet' ORDER BY id DESC LIMIT 1));"
+        echo "INSERT INTO \`majesticsender\`.\`account_walker\` SELECT NULL as id, '${accountId}' as account_id, id as walker_id  FROM \`majesticsender\`.\`walker\` WHERE name = '${hostName} - Skynet' ORDER BY ID DESC LIMIT 1;
 
+	echo "INSERT INTO \`majesticsender\`.\`walker\` (\`smtp_server_id\`, \`name\`, \`number\`, \`providerFilterType\`, \`createdAt\`, \`updatedAt\`, \`priority\`, \`processDirectMails\`, \`processTestMails\`, \`processBroadcastMails\`, \`processFollowUpMails\`, \`group_id\`) VALUES ((SELECT id FROM majesticsender.smtp_server WHERE host = '${ip}' ORDER BY id DESC LIMIT 1), '${hostName}', '150', 'exclude', '${date}', '${date}', '0', '1', '1', '1', '1', (SELECT id FROM majesticsender.walker_group WHERE name = '${serverName}' ORDER BY id DESC LIMIT 1));"
+        echo "INSERT INTO \`majesticsender\`.\`account_walker\` SELECT NULL as id, '${accountId}' as account_id, id as walker_id  FROM \`majesticsender\`.\`walker\` WHERE name = '${hostName}' ORDER BY ID DESC LIMIT 1;
+
+
+	walkerLists=(${lists[l]})
+
+	for ((w = 0; w < ${#walkerLists[@]}; w++))
+	do
+		echo "INSERT INTO \`majesticsender\`.\`walkerMailLabel\` (\`mail_label_id\`, \`walker_id\`, \`genericMailLabelId\`) VALUES (${walkerLists[w]}, (SELECT id FROM \`majesticsender\`.\`walker\` WHERE name =  '${hostName} - Skynet' ORDER BY id DESC LIMIT 1), ${walkerLists[w]});"
+		echo "INSERT INTO \`majesticsender\`.\`walkerMailLabel\` (\`mail_label_id\`, \`walker_id\`, \`genericMailLabelId\`) VALUES (${walkerLists[w]}, (SELECT id FROM \`majesticsender\`.\`walker\` WHERE name =  '${hostName}' ORDER BY id DESC LIMIT 1), ${walkerLists[w]});"
+	done
+
+	echo "INSERT INTO \`majesticsender\`.\`walker_providers\` (\`walker_id\`, \`provider_id\`) VALUES ((SELECT id FROM \`majesticsender\`.\`walker\` WHERE name =  '${hostName}' ORDER BY id DESC LIMIT 1),16);"
+	echo "INSERT INTO \`majesticsender\`.\`walker_providers\` (\`walker_id\`, \`provider_id\`) VALUES ((SELECT id FROM \`majesticsender\`.\`walker\` WHERE name =  '${hostName} - Skynet' ORDER BY id DESC LIMIT 1),16);"
+
+	let l+=1;
 
  fi
 done
