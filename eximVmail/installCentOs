@@ -6,6 +6,13 @@ popd > /dev/null
 
 . ${CURRENT_PATH}/../include/main
 
+NEWLINE=$'\n'
+dnsTemplate=""
+reversedDns=""
+spfRecord=""
+ipadress=(`hostname -I`)
+alphabeth=( 0 a b c d e f g h i j k l m n o p q r s t u v w x y z)
+
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 sudo yum install epel-release
@@ -32,6 +39,19 @@ rm /etc/dovecot/conf.d/10-master.conf -f
 cp  ~/serverDeploy/majesticInstance/10-master.conf /etc/dovecot/conf.d/10-master.conf
 cp  ~/serverDeploy/majesticInstance/dovecot.conf /etc/dovecot/dovecot.conf
 cp  ~/serverDeploy/majesticInstance/exim.conf /etc/exim/exim.conf
+
+
+for ((i = 0; i < ${#ipadress[@]}; i++))
+do
+ ip=${ipadress[i]};
+ if [ "$ip" != "127.0.0.1" ] 
+ then
+	echo "${servername}${alphabeth[i]}.${toplevel}:	${ip}" >> /etc/virtual/helo_data
+	dnsTemplate="${dnsTemplate}${NEWLINE}${servername}${alphabeth[i]}	IN	A	${ip}"
+	reversedDns="${reversedDns}${NEWLINE}${ip}: ${servername}${alphabeth[i]}.${toplevel}"
+	spfRecord="${spfRecord} ip4:${ip}"
+ fi
+done
 
 openssl genrsa -out /etc/exim/dkim.private.key 1024 
 openssl rsa -in /etc/exim/dkim.private.key -out /etc/exim/dkim.public.key -pubout -outform PEM 
@@ -60,5 +80,51 @@ cd serverAPI/
 
 echo "Your public key is:"
 cat /etc/exim/dkim.public.key
+
+
+dns='"'"v=DKIM1; p="'"'
+
+while read line; do # 'line' is the variable name
+        if [ -z "$(echo "$line" | egrep 'BEGIN|END')" ]
+        then
+            	dns="${dns} "'"'"${line}"'"'
+        fi
+done < /etc/exim/dkim.public.key
+
+
+
+echo "Add the following records to the DNS of ${toplevel}:"
+echo "---------------------------------------"
+echo "$dnsTemplate"
+echo "---------------------------------------"
+echo ""
+
+
+echo "Add the following record to each sender domain: "
+echo "---------------------------------------"
+echo  "${servername}._domainkey	IN      TXT       ${dns}"
+echo "---------------------------------------"
+
+echo -n "Vul het txt record domeinnaam in [correo.mxcompute.com]: "
+read txtRecord
+if [ -z "$txtRecord" ]
+then
+	txtRecord="correo.mxcompute.com"
+fi;
+
+record=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.com\stext\s=\s\(.*\) \(\W*all\)\s*\"/\1/p"`
+extra=`nslookup -type=TXT ${txtRecord} 8.8.8.8 | sed -n "s/^correo\.mxcompute\.com\stext\s=\s\(.*\) \(\W*all\)\s*\"/\2/p"`
+
+
+echo "Repace the SPF text record for: "
+echo "---------------------------------------"
+echo "$txtRecord.	IN      TXT       ${record} "'"'" "'"'"${spfRecord} ${extra}"'"'
+echo "---------------------------------------"
+echo ""
+
+echo "Set the following reversed dns: "
+echo "---------------------------------------"
+echo  "${reversedDns}"
+echo "---------------------------------------"
 
 
