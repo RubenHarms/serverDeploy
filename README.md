@@ -39,3 +39,12 @@ CentOS 7
 ``` 
 bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/exim/installCentOsScratch)
 ```
+
+
+## EximVmail:
+
+
+CentOS 7
+
+``` 
+bash <(wget -O - https://raw.githubusercontent.com/RubenHarms/serverDeploy/master/eximVmail/installCentOsScratch)
