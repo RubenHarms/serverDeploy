@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+pushd `dirname $0` > /dev/null
+CURRENT_PATH=`pwd -P`
+popd > /dev/null
+
+. ${CURRENT_PATH}/../include/main
+
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+sudo yum install epel-release
+
+yum -y install net-tools
+yum -y groupinstall 'Development Tools'
+
+systemctl disable iptables
+systemctl stop iptables
+
+echo "Enter a new server hostname:"
+read hostname
+
+hostnamectl set-hostname $hostname
+hostnamectl status
+systemctl restart systemd-hostnamed
+
+yum install exim dovecot -y
+
+rm /etc/dovecot/dovecot.conf -f
+rm /etc/exim/exim.conf -f
+rm /etc/dovecot/conf.d/10-master.conf -f
+
+cp  ~/serverDeploy/majesticInstance/10-master.conf /etc/dovecot/conf.d/10-master.conf
+cp  ~/serverDeploy/majesticInstance/dovecot.conf /etc/dovecot/dovecot.conf
+cp  ~/serverDeploy/majesticInstance/exim.conf /etc/exim/exim.conf
+
+openssl genrsa -out /etc/exim/dkim.private.key 1024 
+openssl rsa -in /etc/exim/dkim.private.key -out /etc/exim/dkim.public.key -pubout -outform PEM 
+
+mkdir /etc/virtual
+touch /etc/virtual/domains
+touch /etc/virtual/hosts
+touch /etc/dovecot/imap.passwd
+
+systemctl enable exim
+systemctl restart exim
+
+systemctl enable dovecot
+systemctl restart dovecot
+
+groupadd vmail
+useradd vmail -g vmail -d /home/vmail
+chown vmail.mail /var/mail/
+usermod -a -G vmail exim
+chmod 750 /home/vmail/
+
+cd ~/
+git clone http://git.e-vence.nl/rsa/serverAPI.git
+cd serverAPI/
+./install.sh
+
+echo "Your public key is:"
+cat /etc/exim/dkim.public.key
+
+
