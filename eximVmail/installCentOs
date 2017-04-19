@@ -23,8 +23,19 @@ yum -y groupinstall 'Development Tools'
 systemctl disable iptables
 systemctl stop iptables
 
-echo "Enter a new server hostname:"
-read hostname
+
+echo -n "Vul het toplevel domeinnaam in [mxcompute.com]: "
+read toplevel
+
+if [ -z "$toplevel" ]
+then
+	toplevel="mxcompute.com"
+fi;
+
+echo -n "Vul de naam van de server in (bijvoorbeeld s1): "
+read servername
+
+hostname="${servername}.${toplevel}"
 
 hostnamectl set-hostname $hostname
 hostnamectl status
@@ -46,7 +57,6 @@ do
  ip=${ipadress[i]};
  if [ "$ip" != "127.0.0.1" ] 
  then
-	echo "${servername}${alphabeth[i]}.${toplevel}:	${ip}" >> /etc/virtual/helo_data
 	dnsTemplate="${dnsTemplate}${NEWLINE}${servername}${alphabeth[i]}	IN	A	${ip}"
 	reversedDns="${reversedDns}${NEWLINE}${ip}: ${servername}${alphabeth[i]}.${toplevel}"
 	spfRecord="${spfRecord} ip4:${ip}"
